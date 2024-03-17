@@ -1,51 +1,76 @@
-﻿Console.WriteLine("Welcome To The Console Project (Calculator)");
+﻿using System;
 
-Console.WriteLine("Input the first number");
-var firstAsText = Console.ReadLine();
-var number1 = int.Parse(firstAsText);
-
-Console.WriteLine("Input the second number");
-var secondAsText = Console.ReadLine();
-var number2 = int.Parse(secondAsText);
-
-Console.WriteLine("What do you want to do?");
-Console.WriteLine("[A]dd numbers");
-Console.WriteLine("[S]ubstract numbers");
-Console.WriteLine("[M]ultiply numbers"); 
-
-var choice = Console.ReadLine();
-
-if(EqualCaseInsensitive(choice, "A"))
+namespace ConsoleCalculator
 {
-    var sum = number1 + number2;
-    PrintFinalEquation(number1, number2, sum, "+");
-}
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            bool restart = true;
 
-else if (EqualCaseInsensitive(choice, "S"))
-{
-    var difference = number1 - number2;
-    PrintFinalEquation(number1, number2, difference, "-");
-}
+            while (restart)
+            {
+                Console.WriteLine("Welcome To The Console Project (Calculator)");
 
-if (EqualCaseInsensitive(choice, "M"))
-{
-    var multiplied = number1 * number2;
-    PrintFinalEquation(number1, number2, multiplied, "*");
-}
-else
-{
-    Console.WriteLine("Invalid choice!");
-}
+                int number1 = GetNumberFromUser("Input the first number");
+                int number2 = GetNumberFromUser("Input the second number");
 
-Console.WriteLine("Press any key close"); 
-Console.ReadKey();
+                Console.WriteLine("What do you want to do?");
+                Console.WriteLine("[A]dd numbers");
+                Console.WriteLine("[S]ubtract numbers");
+                Console.WriteLine("[M]ultiply numbers");
+                Console.WriteLine("[D]ivide numbers");
 
-void PrintFinalEquation(int number1, int number2, int result, string @operator)
-{
-    Console.WriteLine(number1 + " " + @operator + " " + number2 + " = " + result);
-}
+                char choice = Console.ReadKey().KeyChar;
+                Console.WriteLine();
 
-bool EqualCaseInsensitive(string left, string right)
-{ 
-return left.ToUpper().Equals(right.ToUpper());
+                switch (char.ToUpper(choice))
+                {
+                    case 'A':
+                        PrintFinalEquation(number1, number2, number1 + number2, "+");
+                        break;
+                    case 'S':
+                        PrintFinalEquation(number1, number2, number1 - number2, "-");
+                        break;
+                    case 'M':
+                        PrintFinalEquation(number1, number2, number1 * number2, "*");
+                        break;
+                    case 'D':
+                        if (number2 == 0)
+                        {
+                            Console.WriteLine("Cannot divide by zero!");
+                        }
+                        else
+                        {
+                            PrintFinalEquation(number1, number2, number1 / (double)number2, "/");
+                        }
+                        break;
+                    default:
+                        Console.WriteLine("Invalid choice!");
+                        break;
+                }
+
+                Console.WriteLine("Press 'R' to restart or any other key to exit.");
+                restart = Console.ReadKey().Key == ConsoleKey.R;
+                Console.WriteLine();
+            }
+        }
+
+        static int GetNumberFromUser(string message)
+        {
+            Console.WriteLine(message);
+            string input = Console.ReadLine();
+            if (!int.TryParse(input, out int number))
+            {
+                Console.WriteLine("Invalid input! Please enter a valid number.");
+                return GetNumberFromUser(message);
+            }
+            return number;
+        }
+
+        static void PrintFinalEquation(double number1, double number2, double result, string @operator)
+        {
+            Console.WriteLine($"{number1} {@operator} {number2} = {result}");
+        }
+    }
 }
